@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "281785271748",
+    "firebase_url": "https://bart-app-e2b52.firebaseio.com",
+    "project_id": "bart-app-e2b52",
+    "storage_bucket": "bart-app-e2b52.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:281785271748:android:dcf3042228ffa6ac",
+        "android_client_info": {
+          "package_name": "com.bart.bartapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "281785271748-55vdcrue837k5s9ih75npfthba9ao69h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH_iWeFbWs0y4xkO9W4vcyxBSuWsoJFLs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

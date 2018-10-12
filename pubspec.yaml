@@ -24,6 +24,7 @@ dependencies:
   font_awesome_flutter: 8.0.1
   sqflite: 0.12.1
   path_provider: 0.4.1
+  google_sign_in: ^3.2.1
 
 dev_dependencies:
   flutter_test:
