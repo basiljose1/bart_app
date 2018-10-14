@@ -9,14 +9,15 @@ class RestDatasource {
   static final LOGIN_URL = BASE_URL + "/api/auth/token/login/";
 //  static final _API_KEY = "somerandomkey";
 
-  Future<User> login(String email, String password) {
+  Future<String> login(String email, String password) {
     return _netUtil.post(LOGIN_URL, body: {
 //      "token": _API_KEY,
       "email": email,
       "password": password
     }).then((dynamic res) {
+      print("hre");
       if(res.containsKey("auth_token")) {
-        return new User.map(res);
+        return res;
       } else {
         print("Login Failed");
         throw new Exception("Login Failed");

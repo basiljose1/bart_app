@@ -5,12 +5,12 @@ import 'loginAnimation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/animation.dart';
 import 'dart:async';
-import '../../components/SignUpLink.dart';
-import '../../components/Form.dart';
 import '../../components/SignInButton.dart';
 import '../../components/Logo.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
+import 'package:bart_app/data/rest_ds.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key key}) : super(key: key);
@@ -22,6 +22,10 @@ class LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
   AnimationController _loginButtonController;
   var animationStatus = 0;
+  final formKey = new GlobalKey<FormState>();
+  final scaffoldKey = new GlobalKey<ScaffoldState>();
+  String _password, _email;
+
   @override
   void initState() {
     super.initState();
@@ -63,6 +67,35 @@ class LoginScreenState extends State<LoginScreen>
       },
     ) ?? false;
   }
+
+  void _submit() {
+    final form = formKey.currentState;
+    RestDatasource api = new RestDatasource();
+
+    if (form.validate()) {
+      api.login(_email, _password).then((String token) {
+        print(token);
+//        view.onLoginSuccess(user);
+        });
+//          .catchError((Exception error) => _view.onLoginError(error.toString()));
+      setState(() {
+        animationStatus = 1;
+      });
+      _playAnimation();
+      form.save();
+    }
+  }
+
+  String validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value))
+      return 'Enter Valid Email';
+    else
+      return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     timeDilation = 0.4;
@@ -88,8 +121,105 @@ class LoginScreenState extends State<LoginScreen>
                                 padding: const EdgeInsets.only(top: 100.0, bottom: 60.0),
                                 child: new Logo(image: tick),
                               ),
-                              new FormContainer(),
-                              new SignUp()
+//                              Form
+                              new Container(
+                                margin: new EdgeInsets.symmetric(horizontal: 20.0),
+                                child: new Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    new Form(
+                                        key: formKey,
+                                        child: new Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          children: <Widget>[
+                                            new Container(
+                                              decoration: new BoxDecoration(
+                                                border: new Border(
+                                                  bottom: new BorderSide(
+                                                    width: 0.5,
+                                                    color: Colors.white24,
+                                                  ),
+                                                ),
+                                              ),
+                                              child: new TextFormField(
+                                                obscureText: false,
+                                                onSaved: (val) => _email = val,
+                                                validator: (val) {
+                                                  return validateEmail(val);
+                                                },
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                                decoration: new InputDecoration(
+                                                  icon: new Icon(
+                                                    Icons.person_outline,
+                                                    color: Colors.white,
+                                                  ),
+                                                  border: InputBorder.none,
+                                                  hintText: "Email",
+                                                  hintStyle: const TextStyle(color: Colors.white, fontSize: 15.0),
+                                                  contentPadding: const EdgeInsets.only(
+                                                      top: 30.0, right: 30.0, bottom: 30.0, left: 5.0),
+                                                ),
+                                              ),
+                                            ),
+
+                                            new Container(
+                                              decoration: new BoxDecoration(
+                                                border: new Border(
+                                                  bottom: new BorderSide(
+                                                    width: 0.5,
+                                                    color: Colors.white24,
+                                                  ),
+                                                ),
+                                              ),
+                                              child: new TextFormField(
+                                                obscureText: true,
+                                                onSaved: (val) => _password = val,
+                                                validator: (val) {
+                                                  return val.length < 8
+                                                      ? "Password must have atleast 8 chars"
+                                                      : null;
+                                                },
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                                decoration: new InputDecoration(
+                                                  icon: new Icon(
+                                                    Icons.lock_outline,
+                                                    color: Colors.white,
+                                                  ),
+                                                  border: InputBorder.none,
+                                                  hintText: "Password",
+                                                  hintStyle: const TextStyle(color: Colors.white, fontSize: 15.0),
+                                                  contentPadding: const EdgeInsets.only(
+                                                      top: 30.0, right: 30.0, bottom: 30.0, left: 5.0),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )),
+                                  ],
+                                ),
+                              ),
+
+                              new FlatButton(
+                                padding: const EdgeInsets.only(
+                                  top: 160.0,
+                                ),
+                                onPressed: null,
+                                child: new Text(
+                                  "Don't have an account? Sign Up",
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: new TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      letterSpacing: 0.5,
+                                      color: Colors.white,
+                                      fontSize: 12.0),
+                                ),
+                              )
                             ],
                           ),
                           animationStatus == 0
@@ -97,10 +227,7 @@ class LoginScreenState extends State<LoginScreen>
                                   padding: const EdgeInsets.only(bottom: 50.0),
                                   child: new InkWell(
                                       onTap: () {
-                                        setState(() {
-                                          animationStatus = 1;
-                                        });
-                                        _playAnimation();
+                                        _submit();
                                       },
                                       child: new SignIn()),
                                 )

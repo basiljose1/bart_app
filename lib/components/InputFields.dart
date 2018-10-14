@@ -7,7 +7,8 @@ class InputFieldArea extends StatelessWidget {
   InputFieldArea({this.hint, this.obscure, this.icon});
   @override
   Widget build(BuildContext context) {
-    return (new Container(
+    return (
+        new Container(
       decoration: new BoxDecoration(
         border: new Border(
           bottom: new BorderSide(
