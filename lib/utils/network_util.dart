@@ -27,13 +27,15 @@ class NetworkUtil {
         .post(url, body: body, headers: headers, encoding: encoding)
         .then((http.Response response) {
       final String res = response.body;
-      print("res"+ res);
       final int statusCode = response.statusCode;
+      print(statusCode);
 
-      if (statusCode < 200 || statusCode > 400 || json == null) {
-        throw new Exception("Error while fetching data");
+      if (statusCode != 200) {
+        // throw Exception("Error while fetching data");
+        print("Error while fetching data");
+      } else{
+        return _decoder.convert(res);
       }
-      return _decoder.convert(res);
     });
   }
 }

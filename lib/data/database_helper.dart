@@ -36,13 +36,13 @@ class DatabaseHelper {
     print("Created tables");
   }
 
-  Future<int> saveUser(User user) async {
+  Future<int> saveToken(String token) async {
     var dbClient = await db;
-    int res = await dbClient.insert("Token", user.toMap());
+    int res = await dbClient.insert("Token", {"token": token});
     return res;
   }
 
-  Future<int> deleteUsers() async {
+  Future<int> deleteToken() async {
     var dbClient = await db;
     int res = await dbClient.delete("Token");
     return res;

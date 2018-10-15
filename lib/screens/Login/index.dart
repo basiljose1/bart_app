@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'styles.dart';
 import 'loginAnimation.dart';
@@ -10,6 +11,8 @@ import '../../components/Logo.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:bart_app/data/rest_ds.dart';
+import 'package:http/http.dart' as http;
+import 'package:bartapp/data/database_helper.dart'
 
 
 class LoginScreen extends StatefulWidget {
@@ -18,12 +21,10 @@ class LoginScreen extends StatefulWidget {
   LoginScreenState createState() => new LoginScreenState();
 }
 
-class LoginScreenState extends State<LoginScreen>
-    with TickerProviderStateMixin {
+class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin {
   AnimationController _loginButtonController;
   var animationStatus = 0;
   final formKey = new GlobalKey<FormState>();
-  final scaffoldKey = new GlobalKey<ScaffoldState>();
   String _password, _email;
 
   @override
@@ -44,6 +45,12 @@ class LoginScreenState extends State<LoginScreen>
       await _loginButtonController.forward();
       await _loginButtonController.reverse();
     } on TickerCanceled {}
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value) {
+      _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text(value), backgroundColor: Colors.red));
   }
 
   Future<bool> _onWillPop() async {
@@ -73,16 +80,25 @@ class LoginScreenState extends State<LoginScreen>
     RestDatasource api = new RestDatasource();
 
     if (form.validate()) {
-      api.login(_email, _password).then((String token) {
-        print(token);
-//        view.onLoginSuccess(user);
-        });
-//          .catchError((Exception error) => _view.onLoginError(error.toString()));
-      setState(() {
-        animationStatus = 1;
-      });
-      _playAnimation();
       form.save();
+
+      var url = "https://bartapp.tk/api/auth/token/login/";
+      http.post(url, body: {"email": _email,
+      "password": _password})
+          .then((response) {
+            final String res = response.body;
+            final int statusCode = response.statusCode;
+            final JsonDecoder _decoder = new JsonDecoder();
+            var data = _decoder.convert(res);
+            if (statusCode == 200) {
+              print(data["auth_token"]);
+              var db = new DatabaseHelper();
+              await db.saveToken(data["auth_token"]);
+            } else {
+              showInSnackBar(data["non_field_errors"][0]);
+            }
+      });
+
     }
   }
 
@@ -103,6 +119,7 @@ class LoginScreenState extends State<LoginScreen>
     return (new WillPopScope(
         onWillPop: _onWillPop,
         child: new Scaffold(
+          key: _scaffoldKey,
           body: new Container(
               decoration: new BoxDecoration(
                 image: backgroundImage,

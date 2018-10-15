@@ -15,12 +15,10 @@ class RestDatasource {
       "email": email,
       "password": password
     }).then((dynamic res) {
-      print("hre");
       if(res.containsKey("auth_token")) {
-        return res;
+        return res["auth_token"];
       } else {
-        print("Login Failed");
-        throw new Exception("Login Failed");
+        return "Login Failed";
       }
     });
   }
