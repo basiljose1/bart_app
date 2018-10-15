@@ -6,19 +6,12 @@ import 'package:bart_app/utils/shared_pref.dart';
 
 void main() async {
 
-  Widget _defaultHome = new LoginScreen();
-
-  Future _result = getMobileToken().then((val) {
-    print(val.length);
-    if (val.length > 0) {
-      _defaultHome = new HomeScreen();
-    }
-  });
+  bool result = await isLoggedIn();
 
   runApp(new MaterialApp(
     title: "Bart App",
     debugShowCheckedModeBanner: false,
-    home: _defaultHome,
+    home: result ? new LoginScreen(): new HomeScreen(),
     onGenerateRoute: (RouteSettings settings) {
       switch (settings.name) {
         case '/login':
