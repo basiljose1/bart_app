@@ -25,6 +25,8 @@ dependencies:
   sqflite: 0.12.1
   path_provider: 0.4.1
   google_sign_in: ^3.2.1
+  shared_preferences: 0.4.3
+  device_info: ^0.1.2
 
 dev_dependencies:
   flutter_test:

@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:bart_app/screens/Login/index.dart';
 import 'package:bart_app/screens/Home/index.dart';
+import 'package:bart_app/utils/shared_pref.dart';
 
 class Routes {
+  // Set default home.
+  Widget _defaultHome = new LoginScreen();
+  // Get result of the login function.
+  String _result = _getMobileToken();
+  if (_result) {
+    _defaultHome = new HomeScreen();
+  }
   Routes() {
     runApp(new MaterialApp(
       title: "Bart App",
       debugShowCheckedModeBanner: false,
-      home: new LoginScreen(),
+      home: _defaultHome,
       onGenerateRoute: (RouteSettings settings) {
         switch (settings.name) {
           case '/login':

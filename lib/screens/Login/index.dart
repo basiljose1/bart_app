@@ -12,7 +12,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:bart_app/data/rest_ds.dart';
 import 'package:http/http.dart' as http;
-import 'package:bartapp/data/database_helper.dart'
+import 'package:bart_app/utils/shared_pref.dart';
+
 
 
 class LoginScreen extends StatefulWidget {
@@ -92,8 +93,8 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
             var data = _decoder.convert(res);
             if (statusCode == 200) {
               print(data["auth_token"]);
-              var db = new DatabaseHelper();
-              await db.saveToken(data["auth_token"]);
+              _setMobileToken(data["auth_token"]);
+
             } else {
               showInSnackBar(data["non_field_errors"][0]);
             }
