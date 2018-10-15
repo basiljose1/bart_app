@@ -82,6 +82,9 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
 
     if (form.validate()) {
       form.save();
+      setState(() {
+         animationStatus = 1;
+       });
 
       var url = "https://bartapp.tk/api/auth/token/login/";
       http.post(url, body: {"email": _email,
@@ -92,8 +95,10 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
             final JsonDecoder _decoder = new JsonDecoder();
             var data = _decoder.convert(res);
             if (statusCode == 200) {
+              _playAnimation();
               print(data["auth_token"]);
-              _setMobileToken(data["auth_token"]);
+              setMobileToken(data["auth_token"]);
+
 
             } else {
               showInSnackBar(data["non_field_errors"][0]);

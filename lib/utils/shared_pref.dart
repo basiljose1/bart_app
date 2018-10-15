@@ -53,7 +53,7 @@ Future<String> _getDeviceIdentity() async {
 
 Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-Future<String> _getMobileToken() async {
+Future<String> getMobileToken() async {
   final SharedPreferences prefs = await _prefs;
 
   return prefs.getString(_storageKeyMobileToken) ?? '';
@@ -62,7 +62,7 @@ Future<String> _getMobileToken() async {
 /// ----------------------------------------------------------
 /// Method that saves the token in Shared Preferences
 /// ----------------------------------------------------------
-Future<bool> _setMobileToken(String token) async {
+Future<bool> setMobileToken(String token) async {
   final SharedPreferences prefs = await _prefs;
 
   return prefs.setString(_storageKeyMobileToken, token);
@@ -92,14 +92,14 @@ Future<String> handShake() async {
     switch (_status) {
       case "REQUIRES_AUTHENTICATION":
         // We received a new token, so let's save it.
-        await _setMobileToken(response["data"]);
+        await setMobileToken(response["data"]);
         break;
 
       case "INVALID":
         // The token we passed in invalid ??  why ?? somebody played with the local storage?
         // Anyways, we need to remove the previous one from the local storage,
         // and proceed with another handshake
-        await _setMobileToken("");
+        await setMobileToken("");
         break;
 
       //TODO: add other cases
@@ -120,7 +120,7 @@ Future<String> ajaxGet(String serviceName) async {
     var response = await http.get(_urlBase + '/$_serverApi$serviceName',
         headers: {
           'X-DEVICE-ID': await _getDeviceIdentity(),
-          'X-TOKEN': await _getMobileToken(),
+          'X-TOKEN': await getMobileToken(),
           'X-APP-ID': _applicationId
         });
 
@@ -144,7 +144,7 @@ Future<Map> ajaxPost(String serviceName, Map data) async {
         body: json.encode(data),
         headers: {
           'X-DEVICE-ID': await _getDeviceIdentity(),
-          'X-TOKEN': await _getMobileToken(),
+          'X-TOKEN': await getMobileToken(),
           'X-APP-ID': _applicationId,
           'Content-Type': 'application/json; charset=utf-8'
         });
@@ -155,7 +155,7 @@ Future<Map> ajaxPost(String serviceName, Map data) async {
       // If we receive a new token, let's save it
       //
       if (responseBody["status"] == "TOKEN") {
-        await mid.setMobileToken(responseBody["data"]);
+        await setMobileToken(responseBody["data"]);
 
         // TODO: rerun the Post request
       }
