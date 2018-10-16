@@ -145,10 +145,7 @@ class _RegisterShopState extends State<RegisterShop> {
             hint:"Shop Location",
             controller: _c,
             mode:Mode.overlay,
-            inputDecoration: InputDecoration(
-              hintText: "Enter your phone number",
-            ),
-
+            onSaved: (val) => print(val),
           ),
         ),
         Container(

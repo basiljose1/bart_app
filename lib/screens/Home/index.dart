@@ -23,130 +23,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  Animation<double> containerGrowAnimation;
-  AnimationController _screenController;
-  AnimationController _buttonController;
-  Animation<double> buttonGrowAnimation;
-  Animation<double> listTileWidth;
-  Animation<Alignment> listSlideAnimation;
-  Animation<Alignment> buttonSwingAnimation;
-  Animation<EdgeInsets> listSlidePosition;
-  Animation<Color> fadeScreenAnimation;
+
   var animateStatus = 0;
   var deviceSize;
   @override
   void initState() {
     super.initState();
-
-    _screenController = new AnimationController(
-        duration: new Duration(milliseconds: 2000), vsync: this);
-    _buttonController = new AnimationController(
-        duration: new Duration(milliseconds: 1500), vsync: this);
-
-    fadeScreenAnimation = new ColorTween(
-      begin: const Color.fromRGBO(247, 64, 106, 1.0),
-      end: const Color.fromRGBO(247, 64, 106, 0.0),
-    )
-        .animate(
-      new CurvedAnimation(
-        parent: _screenController,
-        curve: Curves.ease,
-      ),
-    );
-    containerGrowAnimation = new CurvedAnimation(
-      parent: _screenController,
-      curve: Curves.easeIn,
-    );
-
-    buttonGrowAnimation = new CurvedAnimation(
-      parent: _screenController,
-      curve: Curves.easeOut,
-    );
-    containerGrowAnimation.addListener(() {
-      this.setState(() {});
-    });
-    containerGrowAnimation.addStatusListener((AnimationStatus status) {});
-
-    listTileWidth = new Tween<double>(
-      begin: 1000.0,
-      end: 600.0,
-    )
-        .animate(
-      new CurvedAnimation(
-        parent: _screenController,
-        curve: new Interval(
-          0.225,
-          0.600,
-          curve: Curves.bounceIn,
-        ),
-      ),
-    );
-
-    listSlideAnimation = new AlignmentTween(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-    )
-        .animate(
-      new CurvedAnimation(
-        parent: _screenController,
-        curve: new Interval(
-          0.325,
-          0.700,
-          curve: Curves.ease,
-        ),
-      ),
-    );
-    buttonSwingAnimation = new AlignmentTween(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomRight,
-    )
-        .animate(
-      new CurvedAnimation(
-        parent: _screenController,
-        curve: new Interval(
-          0.225,
-          0.600,
-          curve: Curves.ease,
-        ),
-      ),
-    );
-    listSlidePosition = new EdgeInsetsTween(
-      begin: const EdgeInsets.only(bottom: 16.0),
-      end: const EdgeInsets.only(bottom: 80.0),
-    )
-        .animate(
-      new CurvedAnimation(
-        parent: _screenController,
-        curve: new Interval(
-          0.325,
-          0.800,
-          curve: Curves.ease,
-        ),
-      ),
-    );
-    _screenController.forward();
   }
-
-  @override
-  void dispose() {
-    _screenController.dispose();
-    _buttonController.dispose();
-    super.dispose();
-  }
-
   void _logout() {
     setState(() {
       animateStatus = 1;
     });
     setMobileToken("");
-    _playAnimation();
   }
 
-  Future<Null> _playAnimation() async {
-    try {
-      await _buttonController.forward();
-    } on TickerCanceled {}
-  }
   final makeBottom = Container(
     height: 55.0,
     child: BottomAppBar(
@@ -175,7 +65,16 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     ),
   );
 
+Widget profileDetails() => Container(
+  height: deviceSize.height * 0.24,
+  child: Row(
+    children: <Widget>[
+      Column(),
+      Column()
+    ],
+  ),
 
+);
   //Column1
   Widget profileColumn() => Container(
     height: deviceSize.height * 0.24,
@@ -348,6 +247,23 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         return true;
       },
       child: new Scaffold(
+        appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: new Padding(
+          padding: const EdgeInsets.all(8.0),
+          child:
+            new CircleAvatar(
+              backgroundImage:AssetImage('assets/logo.png'),
+            ),
+          ),
+        title: Text("Let's bart", style: TextStyle(fontWeight: FontWeight.w200, color: Colors.black),),
+        actions: <Widget>[
+            IconButton(
+              icon: new Icon(Icons.settings, color: Colors.black,),
+              onPressed: () {},
+            ),
+          ],
+        ),
         body: new Container(
           width: screenSize.width,
           height: screenSize.height,
@@ -356,37 +272,43 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             alignment: Alignment.bottomRight,
             children: <Widget>[
               new ListView(
-                shrinkWrap: _screenController.value < 1 ? false : true,
                 padding: const EdgeInsets.all(0.0),
                 children: <Widget>[
                   profileColumn(),
 //                  CommonDivider(),
 //                  followColumn(deviceSize),
 //                  CommonDivider(),
-                  descColumn(),
+//                  descColumn(),
 //                  CommonDivider(),
-                  accountColumn()
+//                  accountColumn()
                 ],
               ),
-              new FadeBox(
-                fadeScreenAnimation: fadeScreenAnimation,
-                containerGrowAnimation: containerGrowAnimation,
-              ),
-              animateStatus == 0
-                  ? new Padding(
-                      padding: new EdgeInsets.all(20.0),
-                      child: new InkWell(
-                          splashColor: Colors.white,
-                          highlightColor: Colors.white,
-                          onTap:_logout,
-                          child: new AddButton(
-                            buttonGrowAnimation: buttonGrowAnimation,
-                          )))
-                  : new StaggerAnimation(
-                      buttonController: _buttonController.view),
-            ],
+
+              new Padding(
+                padding: new EdgeInsets.all(20.0),
+                child: new InkWell(
+                  splashColor: Colors.white,
+                  highlightColor: Colors.white,
+                  onTap:_logout,
+                  child: new Container(
+                    width: 60.0,
+                    height: 60.0,
+                    alignment: FractionalOffset.center,
+                    decoration: new BoxDecoration(
+                        color: const Color.fromRGBO(247, 64, 106, 1.0),
+                        shape: BoxShape.circle),
+                    child: new Icon(
+                      Icons.add,
+                      size: 40.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              )
+
+             ],
+            ),
           ),
-        ),
         bottomNavigationBar: makeBottom,
       ),
     ));
