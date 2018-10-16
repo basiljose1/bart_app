@@ -1,17 +1,17 @@
-import 'package:bart_app/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:bart_app/screens/Login/index.dart';
 import 'package:bart_app/screens/Home/index.dart';
+import 'package:bart_app/screens/Register/index.dart';
 import 'package:bart_app/utils/shared_pref.dart';
 
 void main() async {
 
   bool result = await isLoggedIn();
-
+  
   runApp(new MaterialApp(
     title: "Bart App",
     debugShowCheckedModeBanner: false,
-    home: result ? new LoginScreen(): new HomeScreen(),
+    home: result ? new HomeScreen() : new LoginScreen(),
     onGenerateRoute: (RouteSettings settings) {
       switch (settings.name) {
         case '/login':
@@ -29,6 +29,12 @@ void main() async {
         case '/':
           return new MyCustomRoute(
             builder: (_) => new LoginScreen(),
+            settings: settings,
+          );
+
+        case '/register':
+          return new MyCustomRoute(
+            builder: (_) => new RegisterShop(),
             settings: settings,
           );
       }

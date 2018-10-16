@@ -13,6 +13,7 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:bart_app/data/rest_ds.dart';
 import 'package:http/http.dart' as http;
 import 'package:bart_app/utils/shared_pref.dart';
+import 'package:flushbar/flushbar.dart';
 
 
 
@@ -76,16 +77,14 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
     ) ?? false;
   }
 
+  bool _autovalidate = false;
+
   void _submit() {
     final form = formKey.currentState;
     RestDatasource api = new RestDatasource();
 
     if (form.validate()) {
       form.save();
-      setState(() {
-         animationStatus = 1;
-       });
-
       var url = "https://bartapp.tk/api/auth/token/login/";
       http.post(url, body: {"email": _email,
       "password": _password})
@@ -95,16 +94,44 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
             final JsonDecoder _decoder = new JsonDecoder();
             var data = _decoder.convert(res);
             if (statusCode == 200) {
-              _playAnimation();
               print(data["auth_token"]);
+              setState(() {
+                animationStatus = 1;
+              });
+              _playAnimation();
               setMobileToken(data["auth_token"]);
-
-
             } else {
-              showInSnackBar(data["non_field_errors"][0]);
+//              showInSnackBar(data["non_field_errors"][0]);
+              Flushbar()
+                ..title = "Oh no! here's your problem, dude!"
+                ..message = data["non_field_errors"][0]
+                ..duration = Duration(seconds: 4)
+                ..backgroundColor = Color.fromRGBO(247, 64, 106, 1.0)
+                ..icon = Icon(
+                  Icons.info_outline,
+                  size: 28.0,
+                  color: Colors.white,
+                )
+                ..leftBarIndicatorColor = Colors.red[300]
+                ..show(context);
+
             }
       });
 
+    } else {
+      _autovalidate = true; // Start validating on every change.
+      Flushbar()
+      ..title = "Hey Dude!"
+      ..message = "Please fix the errors in red before signin."
+      ..duration = Duration(seconds: 4)
+      ..backgroundColor=Color.fromRGBO(247, 64, 106, 1.0)
+      ..icon = Icon(
+        Icons.info_outline,
+        size: 28.0,
+        color: Colors.white,
+      )
+      ..leftBarIndicatorColor = Colors.redAccent[300]
+      ..show(context);
     }
   }
 
@@ -152,6 +179,7 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
                                   children: <Widget>[
                                     new Form(
                                         key: formKey,
+                                        autovalidate: _autovalidate,
                                         child: new Column(
                                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                                           children: <Widget>[
@@ -167,6 +195,7 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
                                               child: new TextFormField(
                                                 obscureText: false,
                                                 onSaved: (val) => _email = val,
+                                                keyboardType: TextInputType.emailAddress,
                                                 validator: (val) {
                                                   return validateEmail(val);
                                                 },
@@ -182,7 +211,7 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
                                                   hintText: "Email",
                                                   hintStyle: const TextStyle(color: Colors.white, fontSize: 15.0),
                                                   contentPadding: const EdgeInsets.only(
-                                                      top: 30.0, right: 30.0, bottom: 30.0, left: 5.0),
+                                                      top: 30.0, right: 30.0, bottom: 20.0, left: 5.0),
                                                 ),
                                               ),
                                             ),
@@ -199,9 +228,10 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
                                               child: new TextFormField(
                                                 obscureText: true,
                                                 onSaved: (val) => _password = val,
+                                                keyboardType: TextInputType.text,
                                                 validator: (val) {
                                                   return val.length < 8
-                                                      ? "Password must have atleast 8 chars"
+                                                      ? "Password must be more than 8 character"
                                                       : null;
                                                 },
                                                 style: const TextStyle(
@@ -216,7 +246,7 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
                                                   hintText: "Password",
                                                   hintStyle: const TextStyle(color: Colors.white, fontSize: 15.0),
                                                   contentPadding: const EdgeInsets.only(
-                                                      top: 30.0, right: 30.0, bottom: 30.0, left: 5.0),
+                                                      top: 30.0, right: 30.0, bottom: 20.0, left: 5.0),
                                                 ),
                                               ),
                                             )
@@ -230,7 +260,9 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
                                 padding: const EdgeInsets.only(
                                   top: 160.0,
                                 ),
-                                onPressed: null,
+                                onPressed:(){
+                                  Navigator.pushNamed(context, "/register");
+                                },
                                 child: new Text(
                                   "Don't have an account? Sign Up",
                                   textAlign: TextAlign.center,

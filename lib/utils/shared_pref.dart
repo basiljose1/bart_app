@@ -62,7 +62,6 @@ Future<String> getMobileToken() async {
 Future<bool> isLoggedIn() async {
   final SharedPreferences prefs = await _prefs;
   String result = prefs.getString(_storageKeyMobileToken) ?? '';
-
   return result.length > 0 ? true : false;
 }
 

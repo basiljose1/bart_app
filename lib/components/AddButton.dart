@@ -13,7 +13,7 @@ class AddButton extends StatelessWidget {
           color: const Color.fromRGBO(247, 64, 106, 1.0),
           shape: BoxShape.circle),
       child: new Icon(
-        Icons.add,
+        Icons.power_settings_new,
         size: buttonGrowAnimation.value * 40.0,
         color: Colors.white,
       ),
