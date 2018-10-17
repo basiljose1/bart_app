@@ -28,6 +28,7 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
   var animationStatus = 0;
   final formKey = new GlobalKey<FormState>();
   String _password, _email;
+  int _state = 0;
 
   @override
   void initState() {
@@ -79,9 +80,37 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
 
   bool _autovalidate = false;
 
+  Widget setUpButtonChild() {
+    if (_state == 0) {
+      return new SignIn();
+    } else if (_state == 1) {
+      return CircularProgressIndicator(
+        value: null,
+        strokeWidth: 1.0,
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      );
+    } else {
+      return Icon(Icons.check, color: Colors.white);
+    }
+  }
+  void animateButton() {
+    setState(() {
+      _state = 1;
+    });
+
+    Timer(Duration(milliseconds: 1500), () {
+      setState(() {
+        _state = 0;
+      });
+    });
+  }
   void _submit() {
     final form = formKey.currentState;
-    RestDatasource api = new RestDatasource();
+
+    setState(() {
+      if (_state == 0) {
+        animateButton();
+      }});
 
     if (form.validate()) {
       form.save();
@@ -284,7 +313,7 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
                                       onTap: () {
                                         _submit();
                                       },
-                                      child: new SignIn()),
+                                      child:setUpButtonChild()),
                                 )
                               : new StaggerAnimation(
                                   buttonController:
@@ -296,3 +325,4 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
         )));
   }
 }
+
