@@ -41,6 +41,23 @@ class _RegisterShopState extends State<RegisterShop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+
+        leading: new Padding(
+          padding: const EdgeInsets.all(8.0),
+          child:
+          new CircleAvatar(
+            backgroundImage:AssetImage('assets/logo.png'),
+          ),
+        ),
+        title: Text("Let's bart", style: TextStyle(fontWeight: FontWeight.w200, color: Colors.black),),
+        actions: <Widget>[
+          new BackButton(
+              color: Colors.black
+          ),
+        ],
+      ),
       backgroundColor: Colors.white,
       key: homeScaffoldKey,
       body: Center(
@@ -52,7 +69,7 @@ class _RegisterShopState extends State<RegisterShop> {
   loginBody() => SingleChildScrollView(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[loginHeader(), loginFields()],
+      children: <Widget>[loginFields()],
     ),
   );
 
@@ -82,31 +99,31 @@ class _RegisterShopState extends State<RegisterShop> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
 
-        new RaisedButton(
-            onPressed: () async {
-              // show input autocomplete with selected mode
-              // then get the Prediction selected
-              Prediction p = await showGooglePlacesAutocomplete(
-                  context: context,
-                  apiKey: kGoogleApiKey,
-                  onError: (res) {
-                    homeScaffoldKey.currentState.showSnackBar(
-                        new SnackBar(content: new Text(res.errorMessage)));
-                  },
-                  mode: Mode.overlay,
-                  language: "en",
-                  components: [new Component(Component.country, "in")]);
-                  if (p != null) {
-                    PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
-                    final lat = detail.result.geometry.location.lat;
-                    final lng = detail.result.geometry.location.lng;
-
-                    setState((){
-                      _c.text = "${p.description} - $lat/$lng";
-                    });
-                  }
-            },
-            child: new Text("Search places")),
+//        new RaisedButton(
+//            onPressed: () async {
+//              // show input autocomplete with selected mode
+//              // then get the Prediction selected
+//              Prediction p = await showGooglePlacesAutocomplete(
+//                  context: context,
+//                  apiKey: kGoogleApiKey,
+//                  onError: (res) {
+//                    homeScaffoldKey.currentState.showSnackBar(
+//                        new SnackBar(content: new Text(res.errorMessage)));
+//                  },
+//                  mode: Mode.overlay,
+//                  language: "en",
+//                  components: [new Component(Component.country, "in")]);
+//                  if (p != null) {
+//                    PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
+//                    final lat = detail.result.geometry.location.lat;
+//                    final lng = detail.result.geometry.location.lng;
+//
+//                    setState((){
+//                      _c.text = "${p.description} - $lat/$lng";
+//                    });
+//                  }
+//            },
+//            child: new Text("Search places")),
         Container(
           padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 30.0),
           child: TextField(
@@ -174,13 +191,14 @@ class _RegisterShopState extends State<RegisterShop> {
         ),
         Container(
           padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
-          width: double.infinity,
+          width: 280.0,
+          height: 60.0,
           child: RaisedButton(
             padding: EdgeInsets.all(12.0),
             shape: StadiumBorder(),
             child: Text(
               "Own a shop",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white, fontSize: 22.00),
             ),
             color: const Color.fromRGBO(247, 64, 106, 1.0),
             onPressed: () {},

@@ -13,6 +13,7 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flushbar/flushbar.dart';
 import 'package:bart_app/utils/shared_pref.dart';
 import 'package:bart_app/components/profile_tile.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -67,23 +68,116 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
 Widget profileDetails() => Container(
   height: deviceSize.height * 0.24,
-  child: Row(
+  child: Container(
+    padding: EdgeInsets.all(5.00),
+    decoration: new BoxDecoration(color: Colors.blueAccent),
+    child: new Column(
+      children: <Widget>[
+        new Row(
     children: <Widget>[
-      Column(),
-      Column()
+      new Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          new Container(
+            alignment: AlignmentDirectional.center,
+            child: new Image.asset(
+              'assets/logo.png',
+              height: 60.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ]
+      ),
+      new Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children:<Widget>[
+              new Container(
+                padding: EdgeInsets.only(top: 20.00, left: 20.0),
+//                  width: 200.0,
+                child: new Text ("Basil Jose", style: TextStyle(fontSize: 25.0, color: Colors.white),textAlign: TextAlign.left,),
+              ),
+              new Container(
+                child: new IconButton(icon: new Icon(Icons.mode_edit, color: Colors.white,), onPressed: null,padding: EdgeInsets.only(top: 20.00),alignment: AlignmentDirectional.centerEnd,),
+              )
+             ]
+          ),
+          new Row(
+              mainAxisAlignment:MainAxisAlignment.center ,
+              children:<Widget>[
+                new Container(
+                  padding:EdgeInsets.only(left: 8.00),
+                    child: new InkWell(
+                      onTap: null,
+                      child: FlatButton.icon(onPressed: null, icon:  new Icon(FontAwesomeIcons.facebookMessenger, color: Colors.white,), label: new Text("Messenger", style: TextStyle(color: Colors.white),)),
+                    ),
+                ),
+                new Container(
+                  child: new InkWell(
+                    onTap: null,
+                    child: FlatButton.icon(onPressed: null, icon:  new Icon(FontAwesomeIcons.whatsapp, color: Colors.white,), label: new Text("Whats app", style: TextStyle(color: Colors.white),)),
+                  ),
+                )
+
+              ]
+          ),
+          new Row(
+              mainAxisAlignment:MainAxisAlignment.start ,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:<Widget>[
+                new Container(
+                  padding:EdgeInsets.only(left: 8.00),
+                  child: new InkWell(
+                    onTap: null,
+                    child: FlatButton.icon(onPressed: null, icon:  new Icon(FontAwesomeIcons.mapMarkedAlt, color: Colors.white,), label: new Text("#3 Kakkand", style: TextStyle(color: Colors.white),)),
+                  ),
+                ),
+              ]
+          )
+
+          ]
+      ),
     ],
   ),
-
+      ]
+    )
+  ),
 );
+
+  Widget profileContact() => Container(
+    height: deviceSize.height * 0.24,
+    child: Container(
+      child: new Row(
+          children:<Widget>[
+            new Container(
+              padding:EdgeInsets.only(left: 8.00),
+              child: new InkWell(
+                onTap: null,
+                child: FlatButton.icon(onPressed: null, icon:  new Icon(FontAwesomeIcons.facebookMessenger, color: Colors.white,), label: new Text("Messenger", style: TextStyle(color: Colors.white),)),
+              ),
+            ),
+            new Container(
+              child: new InkWell(
+                onTap: null,
+                child: FlatButton.icon(onPressed: null, icon:  new Icon(FontAwesomeIcons.whatsapp, color: Colors.white,), label: new Text("Whats app", style: TextStyle(color: Colors.white),)),
+              ),
+            )
+          ]
+      ),
+    )
+  );
+
   //Column1
   Widget profileColumn() => Container(
     height: deviceSize.height * 0.24,
     child: FittedBox(
-      alignment: Alignment.center,
+//      alignment: Alignment.center,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+//        padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             ProfileTile(
               title: "Pawan Kumar",
@@ -94,32 +188,19 @@ Widget profileDetails() => Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.chat),
-                    color: Colors.black,
-                    onPressed: () {},
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius:
-                      new BorderRadius.all(new Radius.circular(40.0)),
-                      border: new Border.all(
-                        color: Colors.black,
-                        width: 2.0,
-                      ),
-                    ),
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          "https://avatars0.githubusercontent.com/u/12619420?s=460&v=4"),
-                      foregroundColor: Colors.black,
-                      radius: 30.0,
+                  new Container(
+                    padding:EdgeInsets.only(left: 8.00),
+                    child: new InkWell(
+                      onTap: null,
+                      child: FlatButton.icon(onPressed: null, icon:  new Icon(FontAwesomeIcons.facebookMessenger, color: Colors.white,), label: new Text("Messenger", style: TextStyle(color: Colors.white),)),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.call),
-                    color: Colors.black,
-                    onPressed: () {},
-                  ),
+                  new Container(
+                    child: new InkWell(
+                      onTap: null,
+                      child: FlatButton.icon(onPressed: null, icon:  new Icon(FontAwesomeIcons.whatsapp, color: Colors.white,), label: new Text("Whats app", style: TextStyle(color: Colors.white),)),
+                    ),
+                  )
                 ],
               ),
             )
@@ -274,7 +355,8 @@ Widget profileDetails() => Container(
               new ListView(
                 padding: const EdgeInsets.all(0.0),
                 children: <Widget>[
-                  profileColumn(),
+                  profileDetails(),
+                  profileContact()
 //                  CommonDivider(),
 //                  followColumn(deviceSize),
 //                  CommonDivider(),
