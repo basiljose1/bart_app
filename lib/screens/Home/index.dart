@@ -17,6 +17,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:bart_app/models/user.dart';
 import 'package:bart_app/data/rest_ds.dart';
+import 'package:bart_app/components/shimmer.dart';
+import 'package:bart_app/components/fab_bottom_app_bar.dart';
+import 'package:bart_app/components/fab_with_icons.dart';
+import 'package:bart_app/components/layout.dart';
+
 
 
 
@@ -35,6 +40,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   var animateStatus = 0;
   var deviceSize;
   TabController controller;
+  String _lastSelected = 'TAB: 0';
 
   RestDatasource api = new RestDatasource();
 
@@ -58,286 +64,182 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     setMobileToken("");
   }
 
-  final makeBottom = Container(
-    height: 55.0,
-    child: BottomAppBar(
-      color: Colors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          IconButton(
-            icon: Icon(Icons.home, color: Colors.black87),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.blur_on, color: Colors.black87),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.hotel, color: Colors.black87),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.account_box, color: Colors.black87),
-            onPressed: () {},
-          )
-        ],
-      ),
-    ),
-  );
+  void _selectedTab(int index) {
+    setState(() {
+      _lastSelected = 'TAB: $index';
+      print(_lastSelected);
+    });
+  }
+
+  Widget _buildFab(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () { print("yes"); },
+      tooltip: 'Search',
+      child: Icon(Icons.search),
+      elevation: 2.0,
+    );
+  }
+
+
+
+//  final makeBottom = Container(
+//    height: 55.0,
+//    child: BottomAppBar(
+//      color: Colors.white,
+//      child: Row(
+//        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//        children: <Widget>[
+//          IconButton(
+//            icon: Icon(Icons.home, color: Colors.black87),
+//            onPressed: () {},
+//          ),
+//          IconButton(
+//            icon: Icon(Icons.list, color: Colors.black87),
+//            onPressed: () {},
+//          ),
+//          IconButton(
+//            icon: Icon(Icons.search, color: Colors.black87),
+//            onPressed: () {},
+//          ),
+//          IconButton(
+//            icon: Icon(Icons.assignment_return, color: Colors.black87),
+//            onPressed: () {},
+//          ),
+//          IconButton(
+//            icon: Icon(Icons.assignment, color: Colors.black87),
+//            onPressed: () {},
+//          )
+//        ],
+//      ),
+//    ),
+//  );
+
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     }
   }
-Widget profileDetails() => Container(
-//  height: deviceSize.height * 0.24,
-  child:
-  FutureBuilder<User>(
-  future: api.fetchUser(),
-  builder: (context, snapshot) {
-  if (snapshot.hasData) {
-    return new
-  Container(
-  padding: EdgeInsets.all(5.00),
-  decoration: new BoxDecoration(color: Color.fromRGBO(57, 144, 163, 1.0)),
-  child: new Column(
-  children: <Widget>[
-  new Row(
-  children: <Widget>[
-  new Column(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: <Widget>[
-  new Container(
-  alignment: AlignmentDirectional.center,
-  child: new Image.network(snapshot.data.avatar,
-  height: 60.0,
-  fit: BoxFit.cover,
-  ),
-  ),
-  ]
-  ),
-  new Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: <Widget>[
-  new Row(
-  mainAxisAlignment: MainAxisAlignment.start,
-  children:<Widget>[
-  new Container(
-  padding: EdgeInsets.only(top: 20.00, left: 20.0),
-  //                  width: 200.0,
-  child: new Text (snapshot.data.shop_name, style: TextStyle(fontSize: 25.0, color: Colors.white), textAlign: TextAlign.left, ),
-  ),
-  new Container(
-  child: new IconButton(icon: new Icon(Icons.mode_edit, color: Colors.white, ), onPressed: null, padding: EdgeInsets.only(top: 20.00), alignment: AlignmentDirectional.centerEnd, ),
-  )
-  ]
-  ),
-  new Row(
-  mainAxisAlignment:MainAxisAlignment.center,
-  children:<Widget>[
-  new Container(
-  padding:EdgeInsets.only(left: 8.00),
-  child: new InkWell(
-  onTap: null,
-  child: FlatButton.icon(onPressed: null, icon: new Icon(FontAwesomeIcons.facebookMessenger, color: Colors.white, ), label: new Text("Messenger", style: TextStyle(color: Colors.white), )),
-  ),
-  ),
-  new Container(
-  child: new InkWell(
-  onTap: null,
-  child: FlatButton.icon(onPressed: () => setState(() {_launchURL("whatsapp://send?phone="+snapshot.data.phone);}), icon: new Icon(FontAwesomeIcons.whatsapp, color: Colors.white, ), label: new Text("Whats app", style: TextStyle(color: Colors.white), )),
-  ),
-  )
 
-  ]
-  ),
-  new Row(
-  mainAxisAlignment:MainAxisAlignment.start,
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children:<Widget>[
-  new Container(
-  padding:EdgeInsets.only(left: 8.00),
-  child: new InkWell(
-  onTap: null,
-  child: FlatButton.icon(onPressed: null, icon: new Icon(FontAwesomeIcons.mapMarkedAlt, color: Colors.white, ), label: new Text("#3 Kakkand", style: TextStyle(color: Colors.white), )),
-  ),
-  ),
-  ]
-  )
-
-  ]
-  ),
-  ],
-  ),
-  new Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  mainAxisSize:MainAxisSize.max,
-  children: <Widget>[
-  new Container(
-  width:deviceSize.width * 0.45,
-  decoration: const BoxDecoration(
-  border: Border(
-  top: BorderSide(width: 1.0, color: Colors.white30),
-  right: BorderSide(width: 1.0, color: Colors.white30),
-  ),
-  ),
-  child: new InkWell(
-  onTap: null,
-  child: FlatButton.icon(onPressed:() => setState(() {
-  _launchURL("tel:"+snapshot.data.phone);
-  }), icon: new Icon(FontAwesomeIcons.phone, color: Colors.white, ), label: new Text("Call", style: TextStyle(color: Colors.white), )),
-  ),
-  ),
-  new Container(
-  width:deviceSize.width * 0.45,
-  decoration: const BoxDecoration(
-  border: Border(
-  top: BorderSide(width: 1.0, color: Colors.white30),
-  ),
-  ),
-  child: new InkWell(
-  onTap: null,
-  child: FlatButton.icon(onPressed: () => setState(() {
-  _launchURL("sms:"+snapshot.data.phone);
-  }), icon: new Icon(FontAwesomeIcons.chartBar, color: Colors.white, ), label: new Text("Message", style: TextStyle(color: Colors.white), )),
-  ),
-  )
-
-  ],
-  )
-  ]
-  )
-  );
-  } else if (snapshot.hasError) {
-    return new Text("${snapshot.error}");
-  }
-  return new CircularProgressIndicator();
-  })
-);
-
-  //Column1
-  Widget profileColumn() => Container(
-    height: deviceSize.height * 0.24,
-    child: FittedBox(
-//      alignment: Alignment.center,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            ProfileTile(
-              title: "Pawan Kumar",
-              subtitle: "Developer",
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  Widget profileDetails() => Container(
+  //  height: deviceSize.height * 0.24,
+    child: new FutureBuilder<User>(
+      future: api.fetchUser(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+        return new Container(
+          padding: EdgeInsets.all(5.00),
+          decoration: new BoxDecoration(color: Color.fromRGBO(57, 144, 163, 1.0)),
+          child: new Column(
+            children: <Widget>[
+              new Row(
+                children: <Widget>[
+                  new Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new Container(
+                        alignment: AlignmentDirectional.center,
+                        child: new CircleAvatar(backgroundImage: NetworkImage(snapshot.data.avatar), backgroundColor: Colors.transparent,radius:40.0
+                        )
+                      ),
+                    ]
+                  ),
+                  new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children:<Widget>[
+                          new Container(
+                            padding: EdgeInsets.only(top: 20.00, left: 20.0),
+        //                  width: 200.0,
+                            child: new Text (snapshot.data.shop_name, style: TextStyle(fontSize: 25.0, color: Colors.white), textAlign: TextAlign.left, ),
+                          ),
+                          new Container(
+                            child: new IconButton(icon: new Icon(Icons.mode_edit, color: Colors.white, ), onPressed: null, padding: EdgeInsets.only(top: 20.00), alignment: AlignmentDirectional.centerEnd, ),
+                          )
+                        ]
+                      ),
+                      new Row(
+                        mainAxisAlignment:MainAxisAlignment.center,
+                        children:<Widget>[
+                          new Container(
+                            padding:EdgeInsets.only(left: 8.00),
+                            child: new InkWell(
+                              onTap: null,
+                              child: FlatButton.icon(onPressed: null, icon: new Icon(FontAwesomeIcons.facebookMessenger, color: Colors.white, ), label: new Text("Messenger", style: TextStyle(color: Colors.white), )),
+                            ),
+                          ),
+                          new Container(
+                            child: new InkWell(
+                              onTap: null,
+                              child: FlatButton.icon(onPressed: () => setState(() {_launchURL("whatsapp://send?phone="+snapshot.data.phone);}), icon: new Icon(FontAwesomeIcons.whatsapp, color: Colors.white, ), label: new Text("Whats app", style: TextStyle(color: Colors.white), )),
+                            ),
+                          )
+                        ]
+                      ),
+                      new Row(
+                        mainAxisAlignment:MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children:<Widget>[
+                          new Container(
+                            padding:EdgeInsets.only(left: 8.00),
+                            child: new InkWell(
+                            onTap: null,
+                            child: FlatButton.icon(onPressed: null, icon: new Icon(FontAwesomeIcons.locationArrow, color: Colors.white, ), label: new Text("#3 Kakkand", style: TextStyle(color: Colors.white), )),
+                            ),
+                          ),
+                        ]
+                      )
+                    ]
+                  ),
+                ],
+              ),
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize:MainAxisSize.max,
                 children: <Widget>[
                   new Container(
+                    width:deviceSize.width * 0.45,
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        top: BorderSide(width: 1.0, color: Colors.white30),
+                        right: BorderSide(width: 1.0, color: Colors.white30),
+                      ),
+                    ),
                     child: new InkWell(
                       onTap: null,
-                      child: FlatButton.icon(onPressed: null, icon:  new Icon(FontAwesomeIcons.facebookMessenger, color: Colors.white,), label: new Text("Messenger", style: TextStyle(color: Colors.white),)),
+                      child: FlatButton.icon(onPressed:() => setState(() {
+                        _launchURL("tel:"+snapshot.data.phone);}), icon: new Icon(FontAwesomeIcons.phoneSquare, color: Colors.white, ), label: new Text("Call", style: TextStyle(color: Colors.white), )),
                     ),
                   ),
                   new Container(
+                    width:deviceSize.width * 0.45,
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        top: BorderSide(width: 1.0, color: Colors.white30),
+                      ),
+                    ),
                     child: new InkWell(
                       onTap: null,
-                      child: FlatButton.icon(onPressed: null, icon:  new Icon(FontAwesomeIcons.whatsapp, color: Colors.white,), label: new Text("Whats app", style: TextStyle(color: Colors.white),)),
+                      child: FlatButton.icon(onPressed: () => setState(() {
+                        _launchURL("sms:"+snapshot.data.phone);}), icon: new Icon(FontAwesomeIcons.rocketchat, color: Colors.white, ), label: new Text("Message", style: TextStyle(color: Colors.white), )),
                     ),
                   )
                 ],
-              ),
-            )
-          ],
-        ),
-      ),
-    ),
+              )
+            ]
+          )
+        );
+      } else if (snapshot.hasError) {
+        return new Text("${snapshot.error}");
+    }
+    return new Container(
+      alignment: Alignment(0.0, 0.0),
+      padding: EdgeInsets.all(15.0),
+      child: new CircularProgressIndicator(strokeWidth: 1.5),
+    );
+    })
   );
-
-  //column2
-
-  //column3
-  Widget descColumn() => Container(
-    height: deviceSize.height * 0.13,
-    child: Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 50.0),
-        child: Text(
-          "Google Developer Expert for Flutter. Passionate #Flutter, #Android Developer. #Entrepreneur #YouTuber",
-          style: TextStyle(fontWeight: FontWeight.w700),
-          textAlign: TextAlign.center,
-          maxLines: 3,
-          softWrap: true,
-        ),
-      ),
-    ),
-  );
-  //column4
-  Widget accountColumn() => FittedBox(
-    fit: BoxFit.fill,
-    child: Container(
-      height: deviceSize.height * 0.3,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          FittedBox(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                ProfileTile(
-                  title: "Website",
-                  subtitle: "about.me/imthepk",
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                ProfileTile(
-                  title: "Phone",
-                  subtitle: "+919876543210",
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                ProfileTile(
-                  title: "YouTube",
-                  subtitle: "youtube.com/mtechviral",
-                ),
-              ],
-            ),
-          ),
-          FittedBox(
-            fit: BoxFit.cover,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                ProfileTile(
-                  title: "Location",
-                  subtitle: "New Delhi",
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                ProfileTile(
-                  title: "Email",
-                  subtitle: "mtechviral@gmail.com",
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                ProfileTile(
-                  title: "Facebook",
-                  subtitle: "fb.com/imthepk",
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-
 
   @override
   Widget build(BuildContext context) {
@@ -357,6 +259,7 @@ Widget profileDetails() => Container(
           child:
             new CircleAvatar(
               backgroundImage:AssetImage('assets/logo.png'),
+              foregroundColor: Colors.grey,
             ),
           ),
         title: Text("Let's bart", style: TextStyle(fontWeight: FontWeight.w200, color: Colors.black),),
@@ -371,7 +274,6 @@ Widget profileDetails() => Container(
           width: screenSize.width,
           height: screenSize.height,
           child: new Stack(
-            //alignment: buttonSwingAnimation.value,
             alignment: Alignment.bottomRight,
             children: <Widget>[
               new ListView(
@@ -391,17 +293,35 @@ Widget profileDetails() => Container(
                     ) ,
                   ),
                   new Container(
-                    height: screenSize.height*0.45,
+                    height: screenSize.height,
                     child: new TabBarView(
                       controller: controller,
                       children: <Widget>[
-                        new Icon(Icons.access_alarm),
+                        new Container(
+                          child: new GridView.builder(
+                              itemCount: 5,
+                              shrinkWrap: true,
+                              primary: true,
+                              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                              itemBuilder: (BuildContext context, int index) {
+                                return new GestureDetector(
+                                  child: new Card(
+                                    elevation: 5.0,
+                                    child: new Container(
+                                      alignment: Alignment.center,
+                                      child: new Text('Item $index'),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                  },
+                                );
+                              }),
+                        ),
                         new Icon(Icons.account_balance),
                         new Icon(Icons.account_balance)
                       ],
                     ),
                   )
-
                 ],
               ),
 
@@ -416,20 +336,35 @@ Widget profileDetails() => Container(
                     height: 60.0,
                     alignment: FractionalOffset.center,
                     decoration: new BoxDecoration(
-                        color: const Color.fromRGBO(247, 64, 106, 1.0),
+                        color: const Color.fromRGBO(254,194,57, 1.0),
                         shape: BoxShape.circle),
                     child: new Icon(
-                      Icons.add,
-                      size: 40.0,
+                      Icons.assignment,
+                      size: 30.0,
                       color: Colors.white,
                     ),
                   ),
                 )
               )
-             ],
+            ],
             ),
           ),
-        bottomNavigationBar: makeBottom,
+        bottomNavigationBar: new  FABBottomAppBar(
+          centerItemText: 'B',
+          color: Colors.grey,
+          selectedColor: Color.fromRGBO(254, 194, 57, 1.0),
+          notchedShape: CircularNotchedRectangle(),
+          onTabSelected: _selectedTab,
+          items: [
+            FABBottomAppBarItem(iconData: Icons.home, text: 'Home'),
+            FABBottomAppBarItem(iconData: Icons.list, text: 'List'),
+            FABBottomAppBarItem(iconData: Icons.dashboard, text: 'Required'),
+            FABBottomAppBarItem(iconData: Icons.grid_on, text: 'All'),
+          ],
+        ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: _buildFab(
+              context),
       ),
     ));
   }
