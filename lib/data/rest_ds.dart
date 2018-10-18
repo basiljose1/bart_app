@@ -1,7 +1,11 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:bart_app/utils/network_util.dart';
 import 'package:bart_app/models/user.dart';
+import 'package:http/http.dart' as http;
+import 'package:bart_app/utils/shared_pref.dart';
+
+
 
 class RestDatasource {
   NetworkUtil _netUtil = new NetworkUtil();
@@ -21,5 +25,20 @@ class RestDatasource {
         return "Login Failed";
       }
     });
+  }
+
+  Future<User> fetchUser() async {
+    String token = await getMobileToken();
+    print(token);
+    final response =
+    await http.get('https://bartapp.tk/api/auth/me/',headers: {"Authorization": "Token "+token});
+
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      return User.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load User');
+    }
   }
 }
