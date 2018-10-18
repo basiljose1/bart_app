@@ -16,6 +16,8 @@ import 'package:bart_app/components/profile_tile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:bart_app/screens/Home/category_list.dart';
+import 'package:bart_app/screens/Home/list_item_bart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key key}) : super(key: key);
@@ -28,14 +30,25 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   var animateStatus = 0;
   var deviceSize;
+  TabController controller;
+
   @override
   void initState() {
     super.initState();
+    controller = new TabController(vsync: this, length: 3);
   }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   void _logout() {
     setState(() {
       animateStatus = 1;
     });
+
     setMobileToken("");
   }
 
@@ -75,7 +88,7 @@ Widget profileDetails() => Container(
 //  height: deviceSize.height * 0.24,
   child: Container(
     padding: EdgeInsets.all(5.00),
-    decoration: new BoxDecoration(color: Colors.blueAccent),
+    decoration: new BoxDecoration(color: Color.fromRGBO(57, 144, 163, 1.0)),
     child: new Column(
       children: <Widget>[
         new Row(
@@ -322,7 +335,7 @@ Widget profileDetails() => Container(
       },
       child: new Scaffold(
         appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromRGBO(245, 245, 245, 1.0),
         leading: new Padding(
           padding: const EdgeInsets.all(8.0),
           child:
@@ -349,6 +362,30 @@ Widget profileDetails() => Container(
                 padding: const EdgeInsets.all(0.0),
                 children: <Widget>[
                   profileDetails(),
+                  new Container(
+                    child: new TabBar(
+                      controller: controller,
+                      indicatorColor:Color.fromRGBO(245, 245, 245, 1.0),
+                      labelColor:Colors.black,
+                      tabs: <Widget>[
+                        new Tab(text: "Categories"),
+                        new Tab(text: "All items"),
+                        new Tab(text: "Messages"),
+                      ],
+                    ) ,
+                  ),
+                  new Container(
+                    height: screenSize.height*0.45,
+                    child: new TabBarView(
+                      controller: controller,
+                      children: <Widget>[
+                        new Icon(Icons.access_alarm),
+                        new Icon(Icons.account_balance),
+                        new Icon(Icons.account_balance)
+                      ],
+                    ),
+                  )
+
                 ],
               ),
 

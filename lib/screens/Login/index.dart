@@ -98,11 +98,11 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
       _state = 1;
     });
 
-    Timer(Duration(milliseconds: 1500), () {
-      setState(() {
-        _state = 0;
-      });
-    });
+//    Timer(Duration(milliseconds: 1500), () {
+//      setState(() {
+//        _state = 0;
+//      });
+//    });
   }
   void _submit() {
     final form = formKey.currentState;
@@ -126,7 +126,9 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
               print(data["auth_token"]);
               setState(() {
                 animationStatus = 1;
+                _state = 0;
               });
+
               _playAnimation();
               setMobileToken(data["auth_token"]);
             } else {
@@ -143,6 +145,9 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
                 )
                 ..leftBarIndicatorColor = Colors.red[300]
                 ..show(context);
+                setState(() {
+                  _state = 0;
+                });
 
             }
       });
@@ -161,6 +166,9 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
       )
       ..leftBarIndicatorColor = Colors.redAccent[300]
       ..show(context);
+      setState(() {
+        _state = 0;
+      });
     }
   }
 
